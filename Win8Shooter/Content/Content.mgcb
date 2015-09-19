@@ -1,0 +1,71 @@
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin/Windows
+/intermediateDir:obj/Windows
+/platform:Windows
+/config:
+/profile:Reach
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+
+#---------------------------------- Content ---------------------------------#
+
+#begin Graphics/player.xnb
+/copy:Graphics/player.xnb
+
+#begin Graphics/bgLayer2.png
+/copy:Graphics/bgLayer2.png
+
+#begin Graphics/explosion.png
+/copy:Graphics/explosion.png
+
+#begin Graphics/laser.png
+/copy:Graphics/laser.png
+
+#begin Graphics/mainbackground.png
+/copy:Graphics/mainbackground.png
+
+#begin Graphics/mine.png
+/copy:Graphics/mine.png
+
+#begin Graphics/mineAnimation.png
+/copy:Graphics/mineAnimation.png
+
+#begin Graphics/player.png
+/copy:Graphics/player.png
+
+#begin Graphics/shipAnimation.png
+/copy:Graphics/shipAnimation.png
+
+#begin Fonts/endMenu.png
+/copy:Fonts/endMenu.png
+
+#begin Fonts/mainMenu.png
+/copy:Fonts/mainMenu.png
+
+#begin Sounds/explosion.wav
+/copy:Sounds/explosion.wav
+
+#begin Sounds/gameMusic.mp3
+/copy:Sounds/gameMusic.mp3
+
+#begin Sounds/laserFire.wav
+/copy:Sounds/laserFire.wav
+
+#begin Sounds/menuMusic.mp3
+/copy:Sounds/menuMusic.mp3
+
+#begin Graphics/bgLayer1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/bgLayer1.png
+
