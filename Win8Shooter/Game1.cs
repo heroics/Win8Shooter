@@ -12,6 +12,9 @@ namespace Win8Shooter
     /// </summary>
     public class Game1 : Game
     {
+
+        #region Class Level Variables
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -44,13 +47,15 @@ namespace Win8Shooter
         List<Enemy> enemiesList;
 
         //The rate at which the enemies appear
-        System.TimeSpan enemySpawnTime;
-        System.TimeSpan previousSpawnTIme;
+        TimeSpan enemySpawnTime;
+        TimeSpan previousSpawnTime;
 
 
         //Random Number Generator
-        Random random;
-         
+        Random randomNumber;
+
+
+        #endregion
 
         public Game1()
         {
@@ -81,6 +86,21 @@ namespace Win8Shooter
             //Set a constant player movement speed
             playerMoveSpeed = 8.0f;
 
+
+            //INtialize the enemies list
+            enemiesList = new List<Enemy>();
+
+            //Set the time to zero
+            previousSpawnTime = TimeSpan.Zero;
+
+            //Used to determine how fast enemy spawns
+            enemySpawnTime = TimeSpan.FromSeconds(1.0f);
+
+            //Initalize our random number gnerator
+            randomNumber = new Random();
+
+
+
             base.Initialize();
         }
 
@@ -101,6 +121,8 @@ namespace Win8Shooter
             //Load the players resources
             Animation playerAnimation = new Animation();
 
+
+
             Texture2D playerTexture = Content.Load<Texture2D>("Graphics\\shipAnimation");
 
             playerAnimation.Initialize(playerTexture, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
@@ -113,7 +135,7 @@ namespace Win8Shooter
             //Load the background resource 
             backgroundLayer1.Initialize(Content, "Graphics\\bgLayer1", GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, -1);
             backgroundLayer2.Initialize(Content, "Graphics\\bgLayer2", GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, -2);
-
+            enemyTexture = Content.Load<Texture2D>("Graphics\\mineAnimation");
             textureBackground = Content.Load<Texture2D>("Graphics\\mainbackground");
 
 
@@ -148,6 +170,7 @@ namespace Win8Shooter
             UpdatePlayer(gameTime);
             backgroundLayer1.Update(gameTime);
             backgroundLayer2.Update(gameTime);
+            UpdateEnemies(gameTime);
 
             base.Update(gameTime);
         }
@@ -168,6 +191,10 @@ namespace Win8Shooter
             backgroundLayer1.Draw(spriteBatch);
             backgroundLayer2.Draw(spriteBatch);
 
+            for (int i = 0; i < enemiesList.Count; i++)
+            {
+                enemiesList[i].Draw(spriteBatch);
+            }
 
             player.Draw(spriteBatch);
 
@@ -221,6 +248,55 @@ namespace Win8Shooter
             }
 
             KeepInBounds();
+        }
+
+        private void AddEnemy()
+        {
+            //Create the animation object
+            Animation enemyAnimation = new Animation();
+
+            //Intialize the animation with the correct animation inforamtion
+            enemyAnimation.Initialize(enemyTexture, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
+
+            //Randomly generate the postion of the enemy
+            Vector2 enemyPosition = new Vector2(GraphicsDevice.Viewport.Width + enemyTexture.Width / 2,
+                randomNumber.Next(100, GraphicsDevice.Viewport.Height - 100));
+
+            //Create the enemy
+            Enemy enemy = new Enemy();
+
+            //Intilaize the enemy
+            enemy.Initialze(enemyAnimation, enemyPosition);
+
+            //Add the enemy to the active enemies list
+            enemiesList.Add(enemy);
+        }
+
+        private void UpdateEnemies(GameTime gameTime)
+        {
+            //Spawn a new neemy enemy every 2 seconds
+            if (gameTime.TotalGameTime - previousSpawnTime > enemySpawnTime)
+            {
+                previousSpawnTime = gameTime.TotalGameTime;
+
+                //Create an Enemy
+                AddEnemy();
+            }
+
+
+            //Update The Enemy
+            for (int i = enemiesList.Count - 1; i >= 0; i--)
+            {
+                enemiesList[i].Update(gameTime);
+
+                if (enemiesList[i].isAlive == false)
+                {
+                    enemiesList.RemoveAt(i);
+                }
+            }
+
+
+
         }
 
         private void KeepInBounds()
