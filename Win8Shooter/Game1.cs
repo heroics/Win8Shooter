@@ -171,6 +171,7 @@ namespace Win8Shooter
             backgroundLayer1.Update(gameTime);
             backgroundLayer2.Update(gameTime);
             UpdateEnemies(gameTime);
+            UpdateCollision(); 
 
             base.Update(gameTime);
         }
@@ -294,9 +295,41 @@ namespace Win8Shooter
                     enemiesList.RemoveAt(i);
                 }
             }
+        }
 
+        private void UpdateCollision()
+        {
+            //Use the rectangle's built-in intersection function to 
+            // determine if tow object are overlapping
 
+            Rectangle collisionRectangle1;
+            Rectangle collisionRectangle2;
 
+            //Only creates the rectangle once for the player
+            collisionRectangle1 = new Rectangle((int)player.playerPosition.X,
+                (int)player.playerPosition.Y, player.getWidth, player.getHeight);
+
+            for (int i = 0; i < enemiesList.Count; i++)
+            {
+                collisionRectangle2 = new Rectangle((int)enemiesList[i].enemyPosition.X,
+                    (int)enemiesList[i].enemyPosition.Y, enemiesList[i].getWidth, enemiesList[i].getHeight);
+
+                //Determine if two objects collied with each other
+                if (collisionRectangle1.Intersects(collisionRectangle2))
+                {
+                    // Subtract the health from the player based on the enemy damage
+                    player.playerHitpoints -= enemiesList[i].enemyDamage;
+
+                    //Since the enemy collided with the player destory it
+                    enemiesList[i].enemyHealth = 0;
+
+                    if (player.playerHitpoints <= 0)
+                    {
+                        player.isActive = false;
+                    }
+
+                }
+            }
         }
 
         private void KeepInBounds()
