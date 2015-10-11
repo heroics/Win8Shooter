@@ -58,14 +58,3 @@
 #begin Sounds/menuMusic.mp3
 /copy:Sounds/menuMusic.mp3
 
-#begin Graphics/bgLayer1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:TextureFormat=Color
-/build:Graphics/bgLayer1.png
-
