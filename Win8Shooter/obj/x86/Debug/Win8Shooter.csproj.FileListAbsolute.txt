@@ -39,3 +39,4 @@ C:\Users\Jordan Hunt\Documents\Visual Studio 2015\Projects\Heroic Software Games
 C:\Users\Jordan Hunt\Documents\Visual Studio 2015\Projects\Heroic Software Games\Win8Shooter\Win8Shooter\bin\Windows\Debug\Content\Sounds\gameMusic.mp3
 C:\Users\Jordan Hunt\Documents\Visual Studio 2015\Projects\Heroic Software Games\Win8Shooter\Win8Shooter\bin\Windows\Debug\Content\Sounds\laserFire.wav
 C:\Users\Jordan Hunt\Documents\Visual Studio 2015\Projects\Heroic Software Games\Win8Shooter\Win8Shooter\bin\Windows\Debug\Content\Sounds\menuMusic.mp3
+C:\Users\Jordan Hunt\Documents\Visual Studio 2015\Projects\Heroic Software Games\Win8Shooter\Win8Shooter\obj\x86\Debug\Win8Shooter.csprojResolveAssemblyReference.cache

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Win8Shooter
 {
-    class projectile
+    class Projectile
     {
         #region Fields and Properties
 
@@ -69,7 +69,7 @@ namespace Win8Shooter
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, null, Color.White. 0f,
+            spriteBatch.Draw(Texture, Position, null, Color.White, 0f,
                 new Vector2(Width / 2, Height / 2), 1f, SpriteEffects.None, 0f);
         }
     }

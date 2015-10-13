@@ -54,6 +54,16 @@ namespace Win8Shooter
         //Random Number Generator
         Random randomNumber;
 
+        //Texture for the projectile 
+        Texture2D projectileTexture;
+
+        //List of projectiles
+        List<Projectile> projectileList;
+
+        //The Rate of fire for the player
+        TimeSpan fireTime;
+        TimeSpan previousFireTime;
+
 
         #endregion
 
@@ -82,6 +92,12 @@ namespace Win8Shooter
 
             //Intialize the rectangle background
             rectangleBackgound = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
+            //Intialize the projectiles
+            projectileList = new List<Projectile>();
+
+            //Set the laster to fire every quearter second
+            fireTime = TimeSpan.FromSeconds(.15f);
 
             //Set a constant player movement speed
             playerMoveSpeed = 8.0f;
@@ -123,6 +139,7 @@ namespace Win8Shooter
 
 
 
+
             Texture2D playerTexture = Content.Load<Texture2D>("Graphics\\shipAnimation");
 
             playerAnimation.Initialize(playerTexture, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
@@ -132,10 +149,11 @@ namespace Win8Shooter
 
             player.Initialize(playerAnimation, playerAnimationPosition);
 
-            //Load the background resource 
+            //Load the The Textures
             backgroundLayer1.Initialize(Content, "Graphics\\bgLayer1", GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, -1);
             backgroundLayer2.Initialize(Content, "Graphics\\bgLayer2", GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, -2);
             enemyTexture = Content.Load<Texture2D>("Graphics\\mineAnimation");
+            projectileTexture = Content.Load<Texture2D>("Graphics\\laser");
             textureBackground = Content.Load<Texture2D>("Graphics\\mainbackground");
 
 
@@ -167,11 +185,13 @@ namespace Win8Shooter
             currentMouseState = Mouse.GetState();
 
 
+            //Update Textures, Classes, and Other Things
             UpdatePlayer(gameTime);
             backgroundLayer1.Update(gameTime);
             backgroundLayer2.Update(gameTime);
             UpdateEnemies(gameTime);
-            UpdateCollision(); 
+            UpdateProjectiles();
+            UpdateCollision();
 
             base.Update(gameTime);
         }
@@ -195,6 +215,12 @@ namespace Win8Shooter
             for (int i = 0; i < enemiesList.Count; i++)
             {
                 enemiesList[i].Draw(spriteBatch);
+            }
+
+            //Draw the Projectiles
+            for(int i = 0; i < projectileList.Count; i++)
+            {
+                projectileList[i].Draw(spriteBatch);
             }
 
             player.Draw(spriteBatch);
@@ -248,6 +274,17 @@ namespace Win8Shooter
                 player.playerPosition = player.playerPosition + positionDelta;
             }
 
+            //Fire only every interval set as the fireTime
+            if (gameTime.TotalGameTime - previousFireTime > fireTime)
+            {
+                // Reset our current time
+                previousFireTime = gameTime.TotalGameTime;
+
+                //Add the projecticle, but add it to the front and center of the player
+                AddProjectile(player.playerPosition + new Vector2(player.getWidth / 2, 0));
+
+            }
+
             KeepInBounds();
         }
 
@@ -297,6 +334,11 @@ namespace Win8Shooter
             }
         }
 
+        /// <summary>
+        /// This method will handle the Collisions for everything.
+        /// Parameters: None
+        /// Returns: None
+        /// </summary>
         private void UpdateCollision()
         {
             //Use the rectangle's built-in intersection function to 
@@ -330,6 +372,26 @@ namespace Win8Shooter
 
                 }
             }
+
+            //Projectile VS Enemey Collision
+            for(int i = 0; i < projectileList.Count; i++)
+            {
+                for (int j = 0; j < enemiesList.Count; j++)
+                {
+                    // Create the rectangles I need to determine if we collieded with each other
+                    collisionRectangle1 = new Rectangle((int)projectileList[i].Position.X - projectileList[i].Width / 2,
+                        (int)projectileList[i].Position.Y - projectileList[i].Height / 2, projectileList[i].Width,
+                        projectileList[i].Height);
+                    collisionRectangle2 = new Rectangle((int)enemiesList[j].enemyPosition.X - enemiesList[j].getWidth / 2,
+                       (int)enemiesList[j].enemyPosition.Y - enemiesList[j].getHeight / 2, enemiesList[j].getWidth, enemiesList[j].getHeight);
+
+                    if(collisionRectangle1.Intersects(collisionRectangle2))
+                    {
+                        enemiesList[j].enemyHealth -= projectileList[i].Damage;
+                        projectileList[i].isActive = false;
+                    }
+                }
+            }
         }
 
         private void KeepInBounds()
@@ -341,6 +403,35 @@ namespace Win8Shooter
                 GraphicsDevice.Viewport.Height - player.getHeight);
         }
 
+        private void AddProjectile(Vector2 position)
+        {
+            Projectile projectile = new Projectile();
+            projectile.Initialize(GraphicsDevice.Viewport,
+                projectileTexture, position);
+            projectileList.Add(projectile);
+        }
+
+
+        /// <summary>
+        /// This method will handle the projectiles that are fired by the player
+        /// Parameters : None
+        /// Returns: None
+        /// </summary>
+
+        private void UpdateProjectiles()
+        {
+            //Update the Projectiles
+            for (int i = projectileList.Count - 1; i >= 0; i--)
+            {
+                projectileList[i].Update();
+                if (projectileList[i].isActive == false)
+                {
+                    //If the projectile is no longer active, remove it
+                    projectileList.RemoveAt(i);
+                }
+
+            }
+        }
         #endregion 
     }
 }
