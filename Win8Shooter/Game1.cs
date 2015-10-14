@@ -64,6 +64,9 @@ namespace Win8Shooter
         TimeSpan fireTime;
         TimeSpan previousFireTime;
 
+        //Animation For The Explosions
+        Texture2D explosionTexture;
+        List<Animation> explosionList;
 
         #endregion
 
@@ -115,7 +118,8 @@ namespace Win8Shooter
             //Initalize our random number gnerator
             randomNumber = new Random();
 
-
+            //Initalize the explisions List
+            explosionList = new List<Animation>();
 
             base.Initialize();
         }
@@ -155,7 +159,7 @@ namespace Win8Shooter
             enemyTexture = Content.Load<Texture2D>("Graphics\\mineAnimation");
             projectileTexture = Content.Load<Texture2D>("Graphics\\laser");
             textureBackground = Content.Load<Texture2D>("Graphics\\mainbackground");
-
+            explosionTexture = Content.Load<Texture2D>("Graphics\\explosion");
 
         }
 
@@ -192,6 +196,7 @@ namespace Win8Shooter
             UpdateEnemies(gameTime);
             UpdateProjectiles();
             UpdateCollision();
+            UpdateExplosions(gameTime);
 
             base.Update(gameTime);
         }
@@ -218,9 +223,15 @@ namespace Win8Shooter
             }
 
             //Draw the Projectiles
-            for(int i = 0; i < projectileList.Count; i++)
+            for (int i = 0; i < projectileList.Count; i++)
             {
                 projectileList[i].Draw(spriteBatch);
+            }
+
+            //Draw the Explosions
+            for (int i = 0; i < explosionList.Count; i++)
+            {
+                explosionList[i].Draw(spriteBatch);
             }
 
             player.Draw(spriteBatch);
@@ -329,6 +340,11 @@ namespace Win8Shooter
 
                 if (enemiesList[i].isAlive == false)
                 {
+                    if (enemiesList[i].enemyHealth <= 0)
+                    {
+                        //Add an explosion
+                        AddExplosion(enemiesList[i].enemyPosition);
+                    }
                     enemiesList.RemoveAt(i);
                 }
             }
@@ -374,7 +390,7 @@ namespace Win8Shooter
             }
 
             //Projectile VS Enemey Collision
-            for(int i = 0; i < projectileList.Count; i++)
+            for (int i = 0; i < projectileList.Count; i++)
             {
                 for (int j = 0; j < enemiesList.Count; j++)
                 {
@@ -385,7 +401,7 @@ namespace Win8Shooter
                     collisionRectangle2 = new Rectangle((int)enemiesList[j].enemyPosition.X - enemiesList[j].getWidth / 2,
                        (int)enemiesList[j].enemyPosition.Y - enemiesList[j].getHeight / 2, enemiesList[j].getWidth, enemiesList[j].getHeight);
 
-                    if(collisionRectangle1.Intersects(collisionRectangle2))
+                    if (collisionRectangle1.Intersects(collisionRectangle2))
                     {
                         enemiesList[j].enemyHealth -= projectileList[i].Damage;
                         projectileList[i].isActive = false;
@@ -432,6 +448,45 @@ namespace Win8Shooter
 
             }
         }
+
+        /// <summary>
+        /// This method will create the explosions
+        /// Parameters: 
+        ///     * Vector2 position - this will be the position to draw the explosions
+        /// Returns: None
+        /// </summary>
+
+        private void AddExplosion(Vector2 position)
+        {
+            Animation explosion = new Animation();
+
+            explosion.Initialize(explosionTexture, position, 134, 134, 12, 45, Color.White,
+                1f, false);
+
+            explosionList.Add(explosion);
+        }
+
+        /// <summary>
+        /// This method will Update the explosions, it will remove them based the gametime
+        /// Parameter:
+        ///     * GameTime gameTime - this will be the time that has passed in the game
+        /// Returns: None
+        /// </summary>
+        /// 
+        
+        private void UpdateExplosions(GameTime gameTime)
+        {
+            for (int i = explosionList.Count -1; i >= 0; i--)
+            {
+                explosionList[i].Update(gameTime);
+
+                if(explosionList[i].isActive == false)
+                {
+                    explosionList.RemoveAt(i);
+                }
+            }
+        }
+
         #endregion 
     }
 }

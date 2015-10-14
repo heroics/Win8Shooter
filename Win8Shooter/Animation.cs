@@ -49,7 +49,7 @@ namespace Win8Shooter
         bool isLooping;
 
         //The state of the Animation
-        bool isActive;
+        public bool isActive;
 
         //The Postion of the animation
         public Vector2 spritePosition;
@@ -102,13 +102,11 @@ namespace Win8Shooter
                 if (currentFrame == frameTotal)
                 {
                     currentFrame = 0;
-
-                }
-
-                //If we are not loping deactivate the animation 
-                if (isLooping == false)
-                {
-                    isActive = false;
+                    //If we are not loping deactivate the animation 
+                    if (isLooping == false)
+                    {
+                        isActive = false;
+                    }
                 }
 
                 //reset the elapsed time back to zero
