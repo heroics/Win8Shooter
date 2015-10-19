@@ -10,11 +10,19 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:C:\Users\Jordan Hunt\Documents\Visual Studio 2015\Projects\Heroic Software Games\Win8Shooter\Win8Shooter\bin\Windows\Debug\MonoGame.Extended.Content.Pipeline.dll
+/reference:
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Graphics/player.xnb
-/copy:Graphics/player.xnb
+#begin Fonts/endMenu.png
+/copy:Fonts/endMenu.png
+
+#begin Fonts/mainMenu.png
+/copy:Fonts/mainMenu.png
+
+#begin Graphics/bgLayer1.png
+/copy:Graphics/bgLayer1.png
 
 #begin Graphics/bgLayer2.png
 /copy:Graphics/bgLayer2.png
@@ -40,21 +48,32 @@
 #begin Graphics/shipAnimation.png
 /copy:Graphics/shipAnimation.png
 
-#begin Fonts/endMenu.png
-/copy:Fonts/endMenu.png
-
-#begin Fonts/mainMenu.png
-/copy:Fonts/mainMenu.png
-
 #begin Sounds/explosion.wav
-/copy:Sounds/explosion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/explosion.wav
 
 #begin Sounds/gameMusic.mp3
-/copy:Sounds/gameMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/gameMusic.mp3
 
 #begin Sounds/laserFire.wav
-/copy:Sounds/laserFire.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/laserFire.wav
 
 #begin Sounds/menuMusic.mp3
-/copy:Sounds/menuMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/menuMusic.mp3
+
+#begin Sounds/Gothic Bozo.ttf
+/importer:
+/processor:
+/build:Sounds/Gothic Bozo.ttf
 

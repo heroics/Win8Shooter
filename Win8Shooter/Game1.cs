@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Shooter;
 using System;
 using System.Collections.Generic;
@@ -68,6 +70,20 @@ namespace Win8Shooter
         Texture2D explosionTexture;
         List<Animation> explosionList;
 
+        //The sound that is played when a laser is fried
+        SoundEffect laserSound;
+
+        //THe sound used when the player or an enemy die
+        SoundEffect explosionSound;
+
+        //The music played during gameplay
+        Song gameplayMusic;
+
+        //Number that holds the player score
+        int score;
+        
+
+
         #endregion
 
         public Game1()
@@ -121,6 +137,9 @@ namespace Win8Shooter
             //Initalize the explisions List
             explosionList = new List<Animation>();
 
+            //Set player's score to zero
+            score = 0;
+
             base.Initialize();
         }
 
@@ -160,6 +179,17 @@ namespace Win8Shooter
             projectileTexture = Content.Load<Texture2D>("Graphics\\laser");
             textureBackground = Content.Load<Texture2D>("Graphics\\mainbackground");
             explosionTexture = Content.Load<Texture2D>("Graphics\\explosion");
+
+            //Load the music and sounds
+            laserSound = Content.Load<SoundEffect>("Sounds\\laserFire");
+            explosionSound = Content.Load<SoundEffect>("Sounds\\explosion");
+            gameplayMusic = Content.Load<Song>("Sounds\\gameMusic");
+
+            //Load The Score Font
+            //font = Content.Load<SpriteFont>("Gothic Bozo");
+
+            //Start the music when the game loads
+            PlayMusic(gameplayMusic);
 
         }
 
@@ -234,6 +264,11 @@ namespace Win8Shooter
                 explosionList[i].Draw(spriteBatch);
             }
 
+            // Draw the score
+            // spriteBatch.DrawString(font, "score: " + score, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
+            // Draw the player health
+            // spriteBatch.DrawString(font, "health: " + player.playerHitpoints, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 30), Color.White);
+
             player.Draw(spriteBatch);
 
             spriteBatch.End();
@@ -294,6 +329,15 @@ namespace Win8Shooter
                 //Add the projecticle, but add it to the front and center of the player
                 AddProjectile(player.playerPosition + new Vector2(player.getWidth / 2, 0));
 
+                //Play the sound of the laser
+                laserSound.Play();
+            }
+
+            //Reset score if player health goes to zero
+            if(player.playerHitpoints <= 0)
+            {
+                player.playerHitpoints = 100;
+                score = 0;
             }
 
             KeepInBounds();
@@ -344,6 +388,12 @@ namespace Win8Shooter
                     {
                         //Add an explosion
                         AddExplosion(enemiesList[i].enemyPosition);
+
+                        //PLay the exploision sound
+                        explosionSound.Play();
+
+                        //Add to the player's score
+                        score += enemiesList[i].enemyValue; ;
                     }
                     enemiesList.RemoveAt(i);
                 }
@@ -485,6 +535,29 @@ namespace Win8Shooter
                     explosionList.RemoveAt(i);
                 }
             }
+        }
+
+
+        /// <summary>
+        /// This method will play the music upon Start of the game
+        /// Parameter:
+        ///     * Song song - this will hold the audio file that I want to play
+        /// Returns: None
+        /// </summary>
+        
+        private void PlayMusic(Song song)
+        {
+            //Catch the expection
+            try
+            {
+                //Play the Music
+                MediaPlayer.Play(song);
+
+                MediaPlayer.IsRepeating = true;
+            }
+
+            catch
+            { }
         }
 
         #endregion 
